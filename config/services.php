@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google' => [
+        'client_id' => '1060716650413-u0e4ntlgg77r1cuqv0l0gechfkb4nm5m.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'http://127.0.0.1:8000/api/auth/google-response',
+    ],
+
 ];

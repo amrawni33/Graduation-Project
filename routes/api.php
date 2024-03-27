@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Auth\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['web']], function () {
+    Route::get('/auth/google', [UserController::class, 'redireToGoogle']);
+    Route::get('/auth/google-response', [UserController::class, 'handleGoogleCallback']);
+});
+
+Route::get('/auth/login', [UserController::class, 'login']);
+Route::get('/auth/register', [UserController::class, 'register']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth/logout/{user}', [UserController::class, 'logout']);
+    Route::get('/auth/update', [UserController::class, 'update']);
 });
