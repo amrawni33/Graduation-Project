@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
-use App\QueryBuilders\InternalTransfer\CategoryIndexQuery;
+use App\QueryBuilders\Categories\CategoryIndexQuery;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller

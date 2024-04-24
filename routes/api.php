@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\UserController;
+use App\Http\Controllers\Api\Front\BrandController;
 use App\Http\Controllers\Api\Front\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,5 +35,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [CategoryController::class, 'store']);
         Route::put('/{category}', [CategoryController::class, 'update']);
         Route::delete('/{category}', [CategoryController::class, 'destroy']);
+    });
+
+    Route::prefix('brand')->group(function () {
+        Route::get('/', [BrandController::class, 'index']);
+        Route::get('/{brand}', [BrandController::class, 'show']);
+        Route::post('/', [BrandController::class, 'store']);
+        Route::put('/{brand}', [BrandController::class, 'update']);
+        Route::delete('/{brand}', [BrandController::class, 'destroy']);
     });
 });

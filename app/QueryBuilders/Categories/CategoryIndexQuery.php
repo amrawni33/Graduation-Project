@@ -1,6 +1,6 @@
 <?php
 
-namespace App\QueryBuilders\InternalTransfer;
+namespace App\QueryBuilders\Categories;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
