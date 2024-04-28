@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateBrandRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandCollection;
 use App\Http\Resources\BrandResource;
-use App\QueryBuilders\Brands\BrandIndexQuery;
+use App\QueryBuilders\BrandIndexQuery;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller

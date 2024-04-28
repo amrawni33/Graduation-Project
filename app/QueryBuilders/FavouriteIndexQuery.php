@@ -1,13 +1,12 @@
 <?php
 
-namespace App\QueryBuilders\Brands;
+namespace App\QueryBuilders;
 
-use App\Models\Brand;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class BrandIndexQuery extends QueryBuilder
+class FavouriteIndexQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {

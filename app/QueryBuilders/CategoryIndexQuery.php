@@ -1,6 +1,6 @@
 <?php
 
-namespace App\QueryBuilders\Categories;
+namespace App\QueryBuilders;
 
 use App\Models\Category;
 use Illuminate\Http\Request;

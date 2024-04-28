@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\UserController;
 use App\Http\Controllers\Api\Front\BrandController;
 use App\Http\Controllers\Api\Front\CategoryController;
+use App\Http\Controllers\Api\Front\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,5 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [BrandController::class, 'store']);
         Route::put('/{brand}', [BrandController::class, 'update']);
         Route::delete('/{brand}', [BrandController::class, 'destroy']);
+    });
+
+    Route::prefix('product')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::get('/{product}', [ProductController::class, 'show']);
+        Route::post('/', [ProductController::class, 'store']);
+        Route::put('/{product}', [ProductController::class, 'update']);
+        Route::delete('/{product}', [ProductController::class, 'destroy']);
+
     });
 });
