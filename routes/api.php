@@ -22,12 +22,12 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/auth/google-response', [UserController::class, 'handleGoogleCallback']);
 });
 
-Route::get('/auth/login', [UserController::class, 'login']);
-Route::get('/auth/register', [UserController::class, 'register']);
+Route::post('/auth/login', [UserController::class, 'login']);
+Route::post('/auth/register', [UserController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/auth/logout/{user}', [UserController::class, 'logout']);
-    Route::get('/auth/update', [UserController::class, 'update']);
+    Route::post('/auth/logout/{user}', [UserController::class, 'logout']);
+    Route::put('/auth/update', [UserController::class, 'update']);
 
     Route::prefix('category')->group(function () {
         Route::get('/', [CategoryController::class, 'index']);
