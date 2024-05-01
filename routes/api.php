@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Front\CategoryController;
 use App\Http\Controllers\Api\Front\FavouriteController;
 use App\Http\Controllers\Api\Front\ProductController;
 use App\Http\Controllers\Api\Front\RecentController;
+use App\Http\Controllers\Api\Front\WebsiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -70,5 +71,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [FavouriteController::class, 'store']);
         Route::put('/{favourite}', [FavouriteController::class, 'update']);
         Route::delete('/{favourite}', [FavouriteController::class, 'destroy']);
+    });
+
+    Route::prefix('websites')->group(function () {
+        Route::get('/', [WebsiteController::class, 'index']);
+        Route::get('/{website}', [WebsiteController::class, 'show']);
+        Route::post('/', [WebsiteController::class, 'store']);
+        Route::put('/{website}', [WebsiteController::class, 'update']);
+        Route::delete('/{website}', [WebsiteController::class, 'destroy']);
     });
 });
