@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\UserController;
 use App\Http\Controllers\Api\Front\BrandController;
 use App\Http\Controllers\Api\Front\CategoryController;
+use App\Http\Controllers\Api\Front\FavouriteController;
 use App\Http\Controllers\Api\Front\ProductController;
 use App\Http\Controllers\Api\Front\RecentController;
 use Illuminate\Http\Request;
@@ -61,5 +62,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [RecentController::class, 'store']);
         Route::put('/{recent}', [RecentController::class, 'update']);
         Route::delete('/{recent}', [RecentController::class, 'destroy']);
+    });
+
+    Route::prefix('favourites')->group(function () {
+        Route::get('/', [FavouriteController::class, 'index']);
+        Route::get('/{favourite}', [FavouriteController::class, 'show']);
+        Route::post('/', [FavouriteController::class, 'store']);
+        Route::put('/{favourite}', [FavouriteController::class, 'update']);
+        Route::delete('/{favourite}', [FavouriteController::class, 'destroy']);
     });
 });
