@@ -2,24 +2,24 @@
 
 namespace App\QueryBuilders;
 
-use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class BrandIndexQuery extends QueryBuilder
+
+class RecentIndexQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $query = Brand::query()->with([]);
-
-
+        $query = Product::query()
+            ->with([]);
         parent::__construct($query, $request);
-        $this->allowedFilters(
+
+        $this->allowedFilters([
             AllowedFilter::exact('id'),
-            AllowedFilter::partial('name'),
-            AllowedFilter::partial('icon'),
-            AllowedFilter::partial('url'),
-        );
+            AllowedFilter::partial('seller_name'),
+            AllowedFilter::scope('seller_name'),
+        ]);
     }
 }

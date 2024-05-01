@@ -22,9 +22,9 @@ class StoreBrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'brand_name' => 'required|string',
-            'brand_url' => 'required|string|unique:brands,brand_url',
-            'brand_icon' => 'required|string',
+            'name' => 'required|string',
+            'url' => 'required|string|unique:brands,url',
+            'icon' => 'nullable|string',
         ];
     }
 }

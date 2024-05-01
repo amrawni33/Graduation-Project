@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Triats\CommonScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Wildside\Userstamps\Userstamps;
 
-class Brand extends Model
+class Recent extends Model
 {
-    use HasFactory;
+    use HasFactory, Userstamps, CommonScopes;
 
     /**
      * The attributes that are mass assignable.
@@ -15,8 +17,6 @@ class Brand extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'icon',
-        'url',
+        'product_id',
     ];
 }

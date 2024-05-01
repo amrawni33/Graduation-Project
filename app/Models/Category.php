@@ -15,8 +15,8 @@ class Category extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'category_name',
-        'category_icon',
-        'category_url',
+        'name',
+        'icon',
+        'url',
     ];
 }

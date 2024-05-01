@@ -23,13 +23,8 @@ return new class extends Migration
             $table->string('seller_name')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('website_id')->nullable();
             $table->timestamps();
-
-            // Define foreign key constraint for website_id (assuming this was missing)
-            $table->unsignedBigInteger('website_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
         });
     }
 

@@ -17,9 +17,9 @@ class CategoryIndexQuery extends QueryBuilder
         parent::__construct($query, $request);
         $this->allowedFilters(
             AllowedFilter::exact('id'),
-            AllowedFilter::partial('category_name'),
-            AllowedFilter::partial('category_icon'),
-            AllowedFilter::partial('category_url'),
+            AllowedFilter::partial('name'),
+            AllowedFilter::partial('icon'),
+            AllowedFilter::partial('url'),
         );
     }
 }
