@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateReviewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,13 +19,17 @@ return new class extends Migration
             $table->float('negativity');
             $table->string('url')->nullable();
             $table->float('stars');
-            $table->string('date');
+            $table->dateTime('date');
             $table->json('images')->nullable();
-            $table->unsignedBigInteger('product_id')
-                ->constrained()
-                ->onUpdate('cascade')   
-                ->onDelete('cascade');
+            $table->unsignedBigInteger('product_id');
             $table->timestamps();
+
+            // Define foreign key constraints
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -36,4 +40,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('reviews');
     }
-};
+}

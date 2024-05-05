@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateRecentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,11 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('product_id')
-                ->constrained()
+            $table->unsignedBigInteger('product_id');
+            $table->timestamps();
+
+            // Define foreign key constraints
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
@@ -30,4 +34,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('recents');
     }
-};
+}
