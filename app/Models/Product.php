@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Triats\CommonScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -24,18 +26,57 @@ class Product extends Model
         'website_id',
     ];
 
-    // public function favourites()
-    // {
-    //     return $this->hasMany(Favourites::class);
-    // }
+    /**
+     *
+     *
+     */
+    public function favourites(): HasMany
+    {
+        return $this->hasMany(Favourite::class);
+    }
 
-    // public function Recent()
-    // {
-    //     return $this->hasMany(Recent::class);
-    // }
+    /**
+     *
+     *
+     */
+    public function recents(): HasMany
+    {
+        return $this->hasMany(Recent::class);
+    }
 
-    // public function websites()
-    // {
-    //     return $this->belongsTo(Websites::class);
-    // }
+    /**
+     *
+     *
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     *
+     *
+     */
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    /**
+     *
+     *
+     */
+    public function website(): BelongsTo
+    {
+        return $this->belongsTo(Website::class);
+    }
+
+    /**
+     *
+     *
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

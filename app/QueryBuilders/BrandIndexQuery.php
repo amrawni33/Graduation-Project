@@ -11,8 +11,7 @@ class BrandIndexQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $query = Brand::query()->with([]);
-
+        $query = Brand::query();
 
         parent::__construct($query, $request);
         $this->allowedFilters(

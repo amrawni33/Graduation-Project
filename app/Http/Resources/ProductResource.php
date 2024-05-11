@@ -25,8 +25,10 @@ class ProductResource extends JsonResource
             'total_reviews' => $this->total_reviews,
             'seller_name' => $this->seller_name,
             'brand_id' => $this->brand_id,
-            // 'category_id' => $this->category_id,
-            // 'website_id' => $this->website_id,
+            'category' => new ProductResource($this->whenLoaded('category')),
+            'brand' => new ProductResource($this->whenLoaded('brand')),
+            'website' => new ProductResource($this->whenLoaded('website')),
+            'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
         ];
     }
 }

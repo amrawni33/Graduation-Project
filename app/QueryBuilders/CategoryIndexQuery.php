@@ -11,8 +11,7 @@ class CategoryIndexQuery extends QueryBuilder
 {
     public function __construct(Request $request)
     {
-        $query = Category::query()->with([]);
-
+        $query = Category::query();
 
         parent::__construct($query, $request);
         $this->allowedFilters(

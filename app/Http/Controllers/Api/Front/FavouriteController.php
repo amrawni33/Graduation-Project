@@ -36,6 +36,7 @@ class FavouriteController extends Controller
     {
         $validatedData = $request->validated();
         $favourite = Favourite::create($validatedData);
+        $favourite->with(['product.reviews', 'user']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -46,6 +47,7 @@ class FavouriteController extends Controller
      */
     public function show(Favourite $favourite)
     {
+        $favourite->with(['product.reviews', 'user']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -58,6 +60,8 @@ class FavouriteController extends Controller
     {
         $validatedData = $request->validated();
         $favourite->update($validatedData);
+        
+        $favourite->with(['product.reviews', 'user']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);

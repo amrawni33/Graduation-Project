@@ -24,7 +24,7 @@ class ReviewResource extends JsonResource
             'stars' => $this->stars,
             'date' => $this->date,
             'images' => $this->images,
-            // 'product' => $this->updated_at,
+            'product_id' => $this->product?->id,
         ];
     }
 }

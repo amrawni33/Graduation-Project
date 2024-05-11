@@ -36,6 +36,8 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
         $product = Product::create($validatedData);
+
+        $product->with(['website', 'reviews', 'brand', 'category']);
         return response()->api([
             'product' =>  new ProductResource($product),
         ]);
@@ -46,6 +48,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $product->with(['website', 'reviews', 'brand', 'category']);
         return response()->api([
             'product' =>  new ProductResource($product),
         ]);
@@ -58,6 +61,8 @@ class ProductController extends Controller
     {
         $validatedData = $request->validated();
         $product->update($validatedData);
+
+        $product->with(['website', 'reviews', 'brand', 'category']);
         return response()->api([
             'product' =>  new ProductResource($product),
         ]);

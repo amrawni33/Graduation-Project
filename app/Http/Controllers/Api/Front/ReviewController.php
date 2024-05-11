@@ -36,6 +36,7 @@ class ReviewController extends Controller
     {
         $validatedData = $request->validated();
         $review = Review::create($validatedData);
+        $review->with(['product']);
         return response()->api([
             'review' =>  new ReviewResource($review),
         ]);
@@ -46,6 +47,7 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
+        $review->with(['product']);
         return response()->api([
             'review' =>  new ReviewResource($review),
         ]);
@@ -58,6 +60,8 @@ class ReviewController extends Controller
     {
         $validatedData = $request->validated();
         $review->update($validatedData);
+
+        $review->with(['product']);
         return response()->api([
             'review' =>  new ReviewResource($review),
         ]);

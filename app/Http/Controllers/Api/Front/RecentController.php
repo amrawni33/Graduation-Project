@@ -36,6 +36,8 @@ class RecentController extends Controller
     {
         $validatedData = $request->validated();
         $recent = Recent::create($validatedData);
+
+        $recent->with(['product.reviews', 'user']);
         return response()->api([
             'recent' =>  new RecentResource($recent),
         ]);
@@ -46,6 +48,7 @@ class RecentController extends Controller
      */
     public function show(Recent $recent)
     {
+        $recent->with(['product.reviews', 'user']);
         return response()->api([
             'recent' =>  new RecentResource($recent),
         ]);
@@ -58,6 +61,8 @@ class RecentController extends Controller
     {
         $validatedData = $request->validated();
         $recent->update($validatedData);
+
+        $recent->with(['product.reviews', 'user']);
         return response()->api([
             'recent' =>  new RecentResource($recent),
         ]);
