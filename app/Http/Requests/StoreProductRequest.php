@@ -26,7 +26,7 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|numeric',
             'url' => 'required|url',
             'short_description' => 'nullable|string',
-            'images' => 'nullable|array',
+            'images' => 'nullable|json',
             'images.*' => 'url',
             'average_rating' => 'nullable|numeric',
             'total_reviews' => 'nullable|integer',
@@ -36,4 +36,9 @@ class StoreProductRequest extends FormRequest
             'website_id' => 'required|exists:websites,id',
         ];
     }
+    function prepareForValidation()  {
+        $this->merge([
+            'images' => json_encode($this->images),
+        ]);
+   }
 }

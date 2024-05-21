@@ -24,10 +24,10 @@ class UpdateProductRequest extends FormRequest
         return [
             'name' => 'required|string',
             'price' => 'required|numeric',
-            'url' => 'required|unique|url'.$this->route('product')->id,
+            'url' => 'required|unique:products,url'.$this->route('product')->id,
             'short_description' => 'nullable|string',
             'images' => 'nullable|array',
-            'images.*' => 'required|unique|url'.$this->route('product')->id,
+            'images.*' => 'url',
             'average_rating' => 'nullable|numeric',
             'total_reviews' => 'nullable|integer',
             'seller_name' => 'nullable|string',

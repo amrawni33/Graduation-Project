@@ -11,7 +11,7 @@ class StoreWebsiteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class StoreWebsiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'website_name' => 'required|string',
+            'name' => 'required|string',
             'url' => 'required|url|unique:websites',
             'icon' => 'nullable|string',
         ];
