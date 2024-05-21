@@ -17,6 +17,9 @@ class Review extends Model
      */
     protected $fillable = [
         'text',
+        'title',
+        'reviewer',
+        'is_fake',
         'summarize',
         'positivity',
         'negativity',

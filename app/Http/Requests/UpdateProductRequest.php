@@ -36,4 +36,10 @@ class UpdateProductRequest extends FormRequest
             'website_id' => 'required|exists:websites,id',
         ];
     }
+
+    function prepareForValidation()  {
+        $this->merge([
+            'images' => json_encode($this->images),
+        ]);
+   }
 }

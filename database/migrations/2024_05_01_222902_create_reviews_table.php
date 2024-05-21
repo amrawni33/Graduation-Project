@@ -14,12 +14,15 @@ class CreateReviewsTable extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->string('text');
+            $table->string('title');
+            $table->string('reviewer');
+            $table->boolean('is_fake');
             $table->string('summarize');
             $table->float('positivity');
             $table->float('negativity');
             $table->string('url')->nullable();
-            $table->float('stars');
-            $table->dateTime('date');
+            $table->string('rating');
+            $table->string('date');
             $table->json('images')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->timestamps();

@@ -25,13 +25,22 @@ class StoreReviewRequest extends FormRequest
         return [
             'product_id' => 'required|array',
             'text' => 'required|string',
+            'is_fake' => 'required|boolean',
+            'reviewer' => 'required|string',
+            'title' => 'required|string',
             'summarize' => 'required|string',
             'positivity' => 'required|numeric',
             'negativity' => 'required|numeric',
             'url' => 'nullable|url|unique:reviews',
             'stars' => 'required|numeric',
             'date' => 'required|string',
-            'images' => 'nullable|json',
+            'images' => 'nullable|array',
+            'images.*' => 'url',
         ];
     }
+    function prepareForValidation()  {
+        $this->merge([
+            'images' => json_encode($this->images),
+        ]);
+   }
 }

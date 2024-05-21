@@ -17,13 +17,16 @@ class ReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
+            'title' => $this->title,
+            'reviewer' => $this->reviewer,
+            'is_fake' => $this->is_fake,
             'summarize' => $this->summarize,
             'positivity' => $this->positivity,
             'negativity' => $this->negativity,
             'url' => $this->url,
             'stars' => $this->stars,
             'date' => $this->date,
-            'images' => $this->images,
+            'images' => json_decode($this->images),
             'product_id' => $this->product?->id,
         ];
     }
