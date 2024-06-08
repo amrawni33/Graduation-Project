@@ -13,7 +13,7 @@ class ProductIndexQuery extends QueryBuilder
     public function __construct(Request $request)
     {
         $query = Product::query()
-            ->with(['website', 'reviews', 'brand', 'category']);
+            ->with(['website', 'reviews', 'brand']);
         parent::__construct($query, $request);
 
         $this->allowedFilters([
@@ -26,7 +26,6 @@ class ProductIndexQuery extends QueryBuilder
             AllowedFilter::partial('short_description'),
             AllowedFilter::partial('seller_name'),
             AllowedFilter::exact('brand_id'),
-            AllowedFilter::exact('category_id'),
             AllowedFilter::exact('website_id'),
         ]);
     }

@@ -24,7 +24,7 @@ class ReviewResource extends JsonResource
             'positivity' => $this->positivity,
             'negativity' => $this->negativity,
             'url' => $this->url,
-            'stars' => $this->stars,
+            'rating' => $this->rating,
             'date' => $this->date,
             'images' => json_decode($this->images),
             'product_id' => $this->product?->id,

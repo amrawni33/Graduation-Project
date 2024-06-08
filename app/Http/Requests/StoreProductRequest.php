@@ -23,7 +23,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'url' => 'required|url',
             'short_description' => 'nullable|string',
             'images' => 'nullable|json',
@@ -32,7 +32,6 @@ class StoreProductRequest extends FormRequest
             'total_reviews' => 'nullable|integer',
             'seller_name' => 'nullable|string',
             'brand_id' => 'nullable|exists:brands,id',
-            'category_id' => 'nullable|exists:categories,id',
             'website_id' => 'required|exists:websites,id',
         ];
     }

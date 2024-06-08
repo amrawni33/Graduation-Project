@@ -8,8 +8,16 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Http\Services\Product\SaveProductData;
+use App\Jobs\ReviewsHandlingJob;
+use App\Models\Brand;
+use App\Models\Recent;
+use App\Models\Website;
 use App\QueryBuilders\ProductIndexQuery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -37,7 +45,7 @@ class ProductController extends Controller
         $validatedData = $request->validated();
         $product = Product::create($validatedData);
 
-        $product->with(['website', 'reviews', 'brand', 'category']);
+        $product->with(['website', 'reviews', 'brand']);
         return response()->api([
             'product' =>  new ProductResource($product),
         ]);
@@ -48,7 +56,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->with(['website', 'reviews', 'brand', 'category']);
+        $product->load(['website', 'reviews', 'brand']);
         return response()->api([
             'product' =>  new ProductResource($product),
         ]);
@@ -62,7 +70,7 @@ class ProductController extends Controller
         $validatedData = $request->validated();
         $product->update($validatedData);
 
-        $product->with(['website', 'reviews', 'brand', 'category']);
+        $product->load(['website', 'reviews', 'brand']);
         return response()->api([
             'product' =>  new ProductResource($product),
         ]);
@@ -75,5 +83,77 @@ class ProductController extends Controller
     {
         $product->delete();
         return response()->api();
+    }
+
+
+    /**
+     *returns brand's products
+     */
+    public function getBrandProducts(Request $request)
+    {
+
+        $brandId = $request->query('brand_id');
+        $products = Brand::find($brandId)->products->paginate(10);
+
+        return response()->api([
+            "products" => (new ProductCollection($products))->response()->getData(true)
+        ]);
+    }
+
+    /**
+     *returns brand's products
+     */
+    public function getWebsiteProducts(Request $request)
+    {
+
+        $websiteId = $request->query('website_id');
+        $products = Website::find($websiteId)->products->paginate(10);
+
+        return response()->api([
+            "products" => (new ProductCollection($products))->response()->getData(true)
+        ]);
+    }
+
+    /**
+     *returns recomended products
+     */
+    public function recommendedProducts()
+    {
+
+        $products = Recent::with('product')
+            ->inRandomOrder()
+            ->limit(8)
+            ->get();
+
+        return response()->api([
+            "products" => (new ProductCollection($products))
+        ]);
+    }
+
+
+    /**
+     * get Product And Reviews Data
+     */
+    public function getProductAndReviewsData(Request $request)
+    {
+
+        $url = $request->query('url');
+        $existingProduct = Product::where('url', $url)->first();
+        if($existingProduct){
+            $existingProduct->load(['website', 'reviews', 'brand']);
+            return response()->api([
+                'product' =>  new ProductResource($existingProduct),
+            ]);
+        }
+
+        ReviewsHandlingJob::dispatch(new SaveProductData(), $url);
+        set_time_limit(3000);
+        $url = "http://127.0.0.1:5000/product-scraper?url=".$url;
+        $response = Http::timeout(300000)->get($url);
+        $data  = $response->json();
+
+        return response()->api([
+            "product"=>  $data,
+        ]);
     }
 }

@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateFavouriteRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FavouriteCollection;
 use App\Http\Resources\FavouriteResource;
+use App\Http\Resources\ProductCollection;
+use App\Models\User;
 use App\QueryBuilders\FavouriteIndexQuery;
 use Illuminate\Http\Request;
 
@@ -36,7 +38,7 @@ class FavouriteController extends Controller
     {
         $validatedData = $request->validated();
         $favourite = Favourite::create($validatedData);
-        $favourite->with(['product.reviews', 'user']);
+        $favourite->load(['product.reviews', 'user']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -47,7 +49,7 @@ class FavouriteController extends Controller
      */
     public function show(Favourite $favourite)
     {
-        $favourite->with(['product.reviews', 'user']);
+        $favourite->load(['product.reviews', 'user']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -60,8 +62,8 @@ class FavouriteController extends Controller
     {
         $validatedData = $request->validated();
         $favourite->update($validatedData);
-        
-        $favourite->with(['product.reviews', 'user']);
+
+        $favourite->load(['product.reviews', 'user']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -74,5 +76,18 @@ class FavouriteController extends Controller
     {
         $favourite->delete();
         return response()->api();
+    }
+
+    /**
+     * return user's favourites
+     */
+    public function userFavourites(User $user)
+    {
+
+        $userFavourites = $user->favourites()->with('product')->paginate(10);
+
+        return response()->api([
+            "favourites" => (new FavouriteCollection($userFavourites))->response()->getData(true)
+        ]);
     }
 }

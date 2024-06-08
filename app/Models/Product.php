@@ -17,12 +17,11 @@ class Product extends Model
         'price',
         'url',
         'short_description',
-        'images',
+        'image',
         'average_rating',
         'total_reviews',
         'seller_name',
         'brand_id',
-        'category_id',
         'website_id',
     ];
 
@@ -50,7 +49,7 @@ class Product extends Model
      */
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(Review::class, 'product_id');
     }
 
     /**
@@ -69,14 +68,5 @@ class Product extends Model
     public function website(): BelongsTo
     {
         return $this->belongsTo(Website::class);
-    }
-
-    /**
-     *
-     *
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
     }
 }

@@ -32,7 +32,6 @@ class UpdateProductRequest extends FormRequest
             'total_reviews' => 'nullable|integer',
             'seller_name' => 'nullable|string',
             'brand_id' => 'nullable|exists:brands,id',
-            'category_id' => 'nullable|exists:categories,id',
             'website_id' => 'required|exists:websites,id',
         ];
     }

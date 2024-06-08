@@ -20,14 +20,13 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'url' => $this->url,
             'short_description' => $this->short_description,
-            'images' => json_decode($this->images),
+            'image' =>$this->image,
             'average_rating' => $this->average_rating,
             'total_reviews' => $this->total_reviews,
             'seller_name' => $this->seller_name,
             'brand_id' => $this->brand_id,
-            'category' => new ProductResource($this->whenLoaded('category')),
-            'brand' => new ProductResource($this->whenLoaded('brand')),
-            'website' => new ProductResource($this->whenLoaded('website')),
+            'brand' => new BrandResource($this->whenLoaded('brand')),
+            'website' => new WebsiteResource($this->whenLoaded('website')),
             'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
         ];
     }

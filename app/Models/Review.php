@@ -20,6 +20,7 @@ class Review extends Model
         'title',
         'reviewer',
         'is_fake',
+        'rating',
         'summarize',
         'positivity',
         'negativity',
@@ -36,6 +37,6 @@ class Review extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

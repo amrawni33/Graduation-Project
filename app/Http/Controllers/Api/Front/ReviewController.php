@@ -8,8 +8,10 @@ use App\Http\Requests\UpdateReviewRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ReviewCollection;
 use App\Http\Resources\ReviewResource;
+use App\Models\Product;
 use App\QueryBuilders\ReviewIndexQuery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ReviewController extends Controller
 {
@@ -36,7 +38,7 @@ class ReviewController extends Controller
     {
         $validatedData = $request->validated();
         $review = Review::create($validatedData);
-        $review->with(['product']);
+        $review->load(['product']);
         return response()->api([
             'review' =>  new ReviewResource($review),
         ]);
@@ -47,7 +49,7 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
-        $review->with(['product']);
+        $review->load(['product']);
         return response()->api([
             'review' =>  new ReviewResource($review),
         ]);
@@ -61,7 +63,7 @@ class ReviewController extends Controller
         $validatedData = $request->validated();
         $review->update($validatedData);
 
-        $review->with(['product']);
+        $review->load(['product']);
         return response()->api([
             'review' =>  new ReviewResource($review),
         ]);
@@ -74,5 +76,49 @@ class ReviewController extends Controller
     {
         $review->delete();
         return response()->api();
+    }
+
+    /**
+     * reviews analysis
+     */
+    public function productReviewsAnlysis(Request $request)
+    {
+        $productId = $request->query('product_id');
+        $reviews = Review::query()->where("product_id", $productId)->get();
+
+        $positiveSum = 0;
+        $negativeSum = 0;
+        $positiveCount = 0;
+        $RatingCount = 0;
+        $reviewsCount = 0;
+        $collectionOfPositiveSummrize = [];
+        $collectionOfNegativeSummrize = [];
+        foreach ($reviews as $review) {
+            if ($review->is_fake == 0) {
+                $positiveSum += $review->positivity;
+                $negativeSum += $review->negativity;
+                $RatingCount += $review->rating;
+                $positiveCount++;
+                if ($review->positivity > $review->negativity) {
+                    $collectionOfPositiveSummrize[] = $review->summarize;
+                } else {
+                    $collectionOfNegativeSummrize[] = $review->summarize;
+                }
+            }
+            $reviewsCount++;
+        }
+        $averagePositive = $positiveCount > 0 ? $positiveSum / $positiveCount : 0;
+        $averagenegative = $positiveCount > 0 ? $negativeSum / $positiveCount : 0;
+        $newRating = $positiveCount > 0 ? $RatingCount / $positiveCount : 0;
+        $fakePercentage = $positiveCount > 0 ? ($reviewsCount - $positiveCount)  / $reviewsCount : 0;
+
+        return response()->api([
+            "positivity_average"=> round($averagePositive, 2),
+            "negativity_average"=> round($averagenegative, 2),
+            "rating_after_fake_filter"=> $newRating,
+            "fake_percentage"=> $fakePercentage,
+            "collectionOfPositiveSummrize"=> $collectionOfPositiveSummrize,
+            "collectionOfNegativeSummrize"=> $collectionOfNegativeSummrize,
+        ]);
     }
 }

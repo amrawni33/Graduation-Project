@@ -73,4 +73,15 @@ class BrandController extends Controller
         $brand->delete();
         return response()->api();
     }
+
+    /**
+     * returns random brads
+     */
+    public function randomBrands()
+    {
+        $brands = Brand::inRandomOrder()->limit(5)->get();
+        return response()->api([
+            "brands" => (new BrandCollection($brands))
+        ]);
+    }
 }
