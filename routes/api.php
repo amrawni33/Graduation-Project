@@ -48,11 +48,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::put('/{product}', [ProductController::class, 'update']);
         Route::delete('/{product}', [ProductController::class, 'destroy']);
-        Route::get('/', [ProductController::class, 'getProductAndReviewsData']);
-        Route::get('/brand-products', [ProductController::class, 'getBrandProducts']);
-        Route::get('/website-products', [ProductController::class, 'getWebsiteProducts']);
-        Route::get('/recomended', [ProductController::class, 'recommendedProducts']);
     });
+    Route::get('/brand-products', [ProductController::class, 'getBrandProducts']);
+    Route::get('/website-products', [ProductController::class, 'getWebsiteProducts']);
+    Route::get('/recomended', [ProductController::class, 'recommendedProducts']);
+    Route::get('/url-feach', [ProductController::class, 'getProductAndReviewsData']);
+    Route::get('/random-brand', [BrandController::class, 'randomBrands']);
 
     Route::prefix('recent')->group(function () {
         Route::get('/', [RecentController::class, 'index']);
@@ -60,7 +61,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [RecentController::class, 'store']);
         Route::put('/{recent}', [RecentController::class, 'update']);
         Route::delete('/{recent}', [RecentController::class, 'destroy']);
-        Route::GET('/{user}', [RecentController::class, 'userFavourites']);
     });
 
     Route::prefix('favourites')->group(function () {
@@ -86,6 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [ReviewController::class, 'store']);
         Route::put('/{review}', [ReviewController::class, 'update']);
         Route::delete('/{review}', [ReviewController::class, 'destroy']);
-        Route::get('/', [ReviewController::class, 'productReviewsAnlysis']);
-    });
+        });
+    Route::get('/reviews-analysis', [ReviewController::class, 'productReviewsAnlysis']);
+
 });

@@ -113,12 +113,22 @@ class ReviewController extends Controller
         $fakePercentage = $positiveCount > 0 ? ($reviewsCount - $positiveCount)  / $reviewsCount : 0;
 
         return response()->api([
-            "positivity_average"=> round($averagePositive, 2),
-            "negativity_average"=> round($averagenegative, 2),
-            "rating_after_fake_filter"=> $newRating,
-            "fake_percentage"=> $fakePercentage,
-            "collectionOfPositiveSummrize"=> $collectionOfPositiveSummrize,
-            "collectionOfNegativeSummrize"=> $collectionOfNegativeSummrize,
+            "positivity_average" => round($averagePositive, 2),
+            "negativity_average" => round($averagenegative, 2),
+            "rating_after_fake_filter" => $newRating,
+            "fake_percentage" => $fakePercentage,
+            "collectionOfPositiveSummrize" => $collectionOfPositiveSummrize,
+            "collectionOfNegativeSummrize" => $collectionOfNegativeSummrize,
+        ]);
+    }
+
+    public function getProductReviews(Request $request)
+    {
+        $productId = $request->query('product_id');
+        $reviews = Review::where("product_id", $productId)->paginate(10);
+
+        return response()->api([
+            "reviews" => (new ReviewCollection($reviews))->response()->getData(true)
         ]);
     }
 }

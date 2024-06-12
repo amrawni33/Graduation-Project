@@ -12,6 +12,7 @@ use App\Http\Resources\ProductCollection;
 use App\Models\User;
 use App\QueryBuilders\FavouriteIndexQuery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FavouriteController extends Controller
 {
@@ -38,7 +39,7 @@ class FavouriteController extends Controller
     {
         $validatedData = $request->validated();
         $favourite = Favourite::create($validatedData);
-        $favourite->load(['product.reviews', 'user']);
+        $favourite->load(['product.brand', 'user', 'product.website']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -49,7 +50,7 @@ class FavouriteController extends Controller
      */
     public function show(Favourite $favourite)
     {
-        $favourite->load(['product.reviews', 'user']);
+        $favourite->load(['product.brand', 'user', 'product.website']);
         return response()->api([
             'favourite' =>  new FavouriteResource($favourite),
         ]);
@@ -84,8 +85,8 @@ class FavouriteController extends Controller
     public function userFavourites(User $user)
     {
 
-        $userFavourites = $user->favourites()->with('product')->paginate(10);
-
+        $user = Auth::user();
+        $userFavourites = Favourite::query()->where("created_by", $user->id)->with('product')->paginate(10);
         return response()->api([
             "favourites" => (new FavouriteCollection($userFavourites))->response()->getData(true)
         ]);

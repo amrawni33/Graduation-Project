@@ -11,6 +11,7 @@ use App\Http\Resources\RecentCollection;
 use App\Http\Resources\RecentResource;
 use App\Models\User;
 use App\QueryBuilders\RecentIndexQuery;
+use Illuminate\Support\Facades\Auth;
 
 class RecentController extends Controller
 {
@@ -35,10 +36,14 @@ class RecentController extends Controller
      */
     public function store(StoreRecentRequest $request)
     {
+        $findRecent = Recent::where("product_id", $request->product_id)->first();
+        if ($findRecent) {
+            $this->destroy($findRecent);
+        }
         $validatedData = $request->validated();
         $recent = Recent::create($validatedData);
 
-        $recent->load(['product.reviews', 'user']);
+        $recent->load(['product.brand', 'user', 'product.website']);
         return response()->api([
             'recent' =>  new RecentResource($recent),
         ]);
@@ -49,7 +54,7 @@ class RecentController extends Controller
      */
     public function show(Recent $recent)
     {
-        $recent->load(['product.reviews', 'user']);
+        $recent->load(['product.brand', 'user', 'product.website']);
         return response()->api([
             'recent' =>  new RecentResource($recent),
         ]);
@@ -76,18 +81,5 @@ class RecentController extends Controller
     {
         $recent->delete();
         return response()->api();
-    }
-
-    /**
-     * return user's recent
-     */
-    public function userFavourites(User $user)
-    {
-
-        $userRecent = $user->recents()->with('product')->paginate(10);
-
-        return response()->api([
-            "recent" => (new RecentCollection($userRecent))->response()->getData(true)
-        ]);
     }
 }

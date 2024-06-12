@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\RecentResource;
 use App\Http\Services\Product\SaveProductData;
 use App\Jobs\ReviewsHandlingJob;
 use App\Models\Brand;
@@ -91,9 +92,8 @@ class ProductController extends Controller
      */
     public function getBrandProducts(Request $request)
     {
-
         $brandId = $request->query('brand_id');
-        $products = Brand::find($brandId)->products->paginate(10);
+        $products = Product::where("brand_id", $brandId)->with(['brand', 'website'])->paginate(10);
 
         return response()->api([
             "products" => (new ProductCollection($products))->response()->getData(true)
@@ -107,7 +107,7 @@ class ProductController extends Controller
     {
 
         $websiteId = $request->query('website_id');
-        $products = Website::find($websiteId)->products->paginate(10);
+        $products = Product::where("website_id", $websiteId)->with(['brand', 'website'])->paginate(10);
 
         return response()->api([
             "products" => (new ProductCollection($products))->response()->getData(true)
@@ -120,13 +120,13 @@ class ProductController extends Controller
     public function recommendedProducts()
     {
 
-        $products = Recent::with('product')
+        $products = Recent::with(['product.brand', 'product.website'])
             ->inRandomOrder()
-            ->limit(8)
+            ->limit(5)
             ->get();
 
         return response()->api([
-            "products" => (new ProductCollection($products))
+            "products" => RecentResource::collection($products)
         ]);
     }
 
@@ -136,10 +136,9 @@ class ProductController extends Controller
      */
     public function getProductAndReviewsData(Request $request)
     {
-
         $url = $request->query('url');
         $existingProduct = Product::where('url', $url)->first();
-        if($existingProduct){
+        if ($existingProduct) {
             $existingProduct->load(['website', 'reviews', 'brand']);
             return response()->api([
                 'product' =>  new ProductResource($existingProduct),
@@ -148,12 +147,12 @@ class ProductController extends Controller
 
         ReviewsHandlingJob::dispatch(new SaveProductData(), $url);
         set_time_limit(3000);
-        $url = "http://127.0.0.1:5000/product-scraper?url=".$url;
+        $url = "http://127.0.0.1:5000/product-scraper?url=" . $url;
         $response = Http::timeout(300000)->get($url);
         $data  = $response->json();
 
         return response()->api([
-            "product"=>  $data,
+            "product" =>  $data,
         ]);
     }
 }

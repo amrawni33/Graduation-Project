@@ -13,7 +13,7 @@ class ProductIndexQuery extends QueryBuilder
     public function __construct(Request $request)
     {
         $query = Product::query()
-            ->with(['website', 'reviews', 'brand']);
+            ->with(['website', 'brand']);
         parent::__construct($query, $request);
 
         $this->allowedFilters([

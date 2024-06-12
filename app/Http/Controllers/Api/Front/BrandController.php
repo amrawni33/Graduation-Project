@@ -79,7 +79,7 @@ class BrandController extends Controller
      */
     public function randomBrands()
     {
-        $brands = Brand::inRandomOrder()->limit(5)->get();
+        $brands = Brand::inRandomOrder()->limit(1)->get();
         return response()->api([
             "brands" => (new BrandCollection($brands))
         ]);
