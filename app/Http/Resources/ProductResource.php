@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Favourite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ProductResource extends JsonResource
 {
@@ -24,9 +26,18 @@ class ProductResource extends JsonResource
             'average_rating' => $this->average_rating,
             'total_reviews' => $this->total_reviews,
             'seller_name' => $this->seller_name,
+            'is_favorite' => $this->isFavorite($this->id),
             'brand' => new BrandResource($this->whenLoaded('brand')),
             'website' => new WebsiteResource($this->whenLoaded('website')),
             'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
         ];
+    }
+
+    public function isFavorite($id){
+        $isFound = Favourite::query()->where('created_by', Auth::user()->id)->where('product_id', $id)->first();
+        if ($isFound) {
+            return 1;
+        }
+        return 0;
     }
 }

@@ -56,12 +56,12 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->api([], 1, $validator->errors()->first());
+            return response()->api([], 1, $validator->errors()->first(), 400);
         }
 
         $credentials = $request->only('email', 'password');
@@ -75,7 +75,7 @@ class UserController extends Controller
             return response()->api($data);
         } else {
 
-            return response()->api([], 1, __('auth.failed'));
+            return response()->api([], 1, __('auth.failed'), 401);
         } //end of else
 
     } //end of login
@@ -84,12 +84,12 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'email' => 'required|unique:users|email',
             'password' => 'required|min:6',
         ]);
 
         if ($validator->fails()) {
-            return response()->api([], 1, $validator->errors()->first());
+            return response()->api([], 1, $validator->errors()->first(), 400);
         }
 
         $request->merge([
@@ -111,19 +111,20 @@ class UserController extends Controller
             $request->validate([
                 'password' => ['string', 'min:4', 'confirmed'],
             ], [
-                'password.confirmed' => 'password confirme',
+                'password.confirmed' => 'password confirm not match',
             ]);
             $validatedData['password'] = Hash::make($request->password);
         }
         $user->update($validatedData);
 
         return response()->api([
-            "user" => $user
+            "user" => new UserResource($user)
         ]);
     }
 
-    public function logout(User $user)
+    public function logout()
     {
+        $user = Auth::user();
         $user->tokens()->delete();
         return response()->api();
     }

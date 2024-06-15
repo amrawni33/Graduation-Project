@@ -30,8 +30,8 @@ Route::post('/auth/login', [UserController::class, 'login']);
 Route::post('/auth/register', [UserController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/auth/logout/{user}', [UserController::class, 'logout']);
-    Route::put('/auth/update', [UserController::class, 'update']);
+    Route::get('/auth/logout', [UserController::class, 'logout']);
+    Route::put('/auth/update/{user}', [UserController::class, 'update']);
 
     Route::prefix('brand')->group(function () {
         Route::get('/', [BrandController::class, 'index']);

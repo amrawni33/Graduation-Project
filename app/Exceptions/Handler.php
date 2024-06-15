@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+use BadMethodCallException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Validation\ValidationException;
@@ -32,8 +35,10 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (ValidationException $e, $request) {
+            $statusCode = gettype($e->getCode()) == 'integer' && strlen((string) $e->getCode()) == 3?$e->getCode():500;
+
             if ($request->wantsJson()) {
-                return response()->api([], 1, $e->errors(), statusCode:$e->status);
+                return response()->api([], 1, $e->getMessage(), statusCode:$statusCode);
             }
         });
 
@@ -53,6 +58,27 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (NotFoundHttpException $e, $request) {
+            $statusCode = gettype($e->getCode()) == 'integer' && strlen((string) $e->getCode()) == 3?$e->getCode():404;
+            if ($request->wantsJson()) {
+                return response()->api([], 1, $e->getMessage(), statusCode:$statusCode);
+            }
+        });
+
+        $this->renderable(function (BadMethodCallException $e, $request) {
+            $statusCode = gettype($e->getCode()) == 'integer' && strlen((string) $e->getCode()) == 3?$e->getCode():404;
+            if ($request->wantsJson()) {
+                return response()->api([], 1, $e->getMessage(), statusCode:$statusCode);
+            }
+        });
+
+        $this->renderable(function (AuthorizationException $e, $request) {
+            $statusCode = gettype($e->getCode()) == 'integer' && strlen((string) $e->getCode()) == 3?$e->getCode():404;
+            if ($request->wantsJson()) {
+                return response()->api([], 1, $e->getMessage(), statusCode:$statusCode);
+            }
+        });
+
+        $this->renderable(function (AuthenticationException $e, $request) {
             $statusCode = gettype($e->getCode()) == 'integer' && strlen((string) $e->getCode()) == 3?$e->getCode():404;
             if ($request->wantsJson()) {
                 return response()->api([], 1, $e->getMessage(), statusCode:$statusCode);

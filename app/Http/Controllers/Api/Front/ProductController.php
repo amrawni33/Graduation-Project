@@ -16,6 +16,7 @@ use App\Models\Recent;
 use App\Models\Website;
 use App\QueryBuilders\ProductIndexQuery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
@@ -57,6 +58,16 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        $findRecent = Recent::where("product_id", $product->id)
+            ->where("created_by", Auth::user()->id)
+            ->first();
+        if ($findRecent) {
+            $findRecent->delete();
+        }
+        Recent::create([
+            "product_id" => $product->id,
+        ]);
+        
         $product->load(['website', 'reviews', 'brand']);
         return response()->api([
             'product' =>  new ProductResource($product),
@@ -138,7 +149,20 @@ class ProductController extends Controller
     {
         $url = $request->query('url');
         $existingProduct = Product::where('url', $url)->first();
+
         if ($existingProduct) {
+            sleep(10);
+            $findRecent = Recent::where("product_id", $existingProduct->id)
+                ->where("created_by", Auth::user()->id)
+                ->first();
+            if ($findRecent) {
+                $findRecent->delete();
+            }
+
+            Recent::create([
+                "product_id" => $existingProduct->id,
+            ]);
+
             $existingProduct->load(['website', 'reviews', 'brand']);
             return response()->api([
                 'product' =>  new ProductResource($existingProduct),

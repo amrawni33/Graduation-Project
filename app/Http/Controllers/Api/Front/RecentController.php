@@ -36,7 +36,9 @@ class RecentController extends Controller
      */
     public function store(StoreRecentRequest $request)
     {
-        $findRecent = Recent::where("product_id", $request->product_id)->first();
+        $findRecent = Recent::where("product_id", $request->product_id)
+            ->where("created_by", Auth::user()->id)
+            ->first();
         if ($findRecent) {
             $this->destroy($findRecent);
         }
