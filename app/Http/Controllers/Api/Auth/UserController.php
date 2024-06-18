@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    public function show()
+    {
+        $user = Auth::user();
+        return response()->api([
+            "user" => new UserResource($user)
+        ]);
+    }
     public function redireToGoogle()
     {
         return Socialite::driver('google')->redirect();
