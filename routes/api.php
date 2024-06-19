@@ -70,8 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [FavouriteController::class, 'store']);
         Route::put('/{favourite}', [FavouriteController::class, 'update']);
         Route::delete('/{favourite}', [FavouriteController::class, 'destroy']);
-        Route::get('/{user}', [FavouriteController::class, 'destroy']);
     });
+    Route::delete('/favourites', [FavouriteController::class, 'destroy']);
 
     Route::prefix('websites')->group(function () {
         Route::get('/', [WebsiteController::class, 'index']);

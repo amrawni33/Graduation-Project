@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\FavouriteCollection;
 use App\Http\Resources\FavouriteResource;
 use App\Http\Resources\ProductCollection;
+use App\Models\Product;
 use App\Models\User;
 use App\QueryBuilders\FavouriteIndexQuery;
 use Illuminate\Http\Request;
@@ -73,8 +74,10 @@ class FavouriteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Favourite $favourite)
+    public function destroy(Request $request)
     {
+        $productId = $request->query('product_id');
+        $favourite = Favourite::where('product_id', $productId)->where('created_by', Auth::user()->id)->first();
         $favourite->delete();
         return response()->api();
     }
