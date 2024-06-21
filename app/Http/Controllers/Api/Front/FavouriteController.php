@@ -39,6 +39,10 @@ class FavouriteController extends Controller
     public function store(StoreFavouriteRequest $request)
     {
         $validatedData = $request->validated();
+        $findFav = Favourite::where('product_id', $validatedData['product_id'])->where('created_by', Auth::user()->id)->first();
+        if ($findFav) {
+            return response()->api([], 1, 'This product is already in favorites', 401);
+        }
         $favourite = Favourite::create($validatedData);
         $favourite->load(['product.brand', 'user', 'product.website']);
         return response()->api([
