@@ -85,7 +85,7 @@ class ReviewController extends Controller
     {
         $productId = $request->query('product_id');
         $reviews = Review::query()->where("product_id", $productId)->get();
-
+        $url= Product::where("id", $productId)->first()->url;
         $positiveSum = 0;
         $negativeSum = 0;
         $positiveCount = 0;
@@ -112,6 +112,8 @@ class ReviewController extends Controller
         $newRating = $positiveCount > 0 ? $RatingCount / $positiveCount : 0;
         $fakePercentage = $positiveCount > 0 ? ($reviewsCount - $positiveCount)  / $reviewsCount : 0;
 
+        $asin = $this->extractAsin($url);
+        $url_chart = "https://charts.camelcamelcamel.com/us/{$asin}/amazon.png?force=1&zero=0&w=1063&h=549.5&desired=false&legend=1&ilt=1&tp=all&fo=0&lang=en";
         return response()->api([
             "positivity_average" => round($averagePositive, 2),
             "negativity_average" => round($averagenegative, 2),
@@ -119,6 +121,7 @@ class ReviewController extends Controller
             "fake_percentage" => $fakePercentage,
             "collectionOfPositiveSummrize" => $collectionOfPositiveSummrize,
             "collectionOfNegativeSummrize" => $collectionOfNegativeSummrize,
+            "price_tracking_chart" => $url_chart,
         ]);
     }
 
@@ -130,5 +133,22 @@ class ReviewController extends Controller
         return response()->api([
             "reviews" => (new ReviewCollection($reviews))->response()->getData(true)
         ]);
+    }
+    public function extractAsin($url)
+    {
+        // Define the regex pattern for ASIN
+        $pattern = '/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/';
+
+        // Search for the pattern in the URL
+        preg_match($pattern, $url, $matches);
+
+        // Extract the ASIN from the match groups
+        if (isset($matches[1]) && $matches[1]) {
+            return $matches[1];
+        } elseif (isset($matches[2]) && $matches[2]) {
+            return $matches[2];
+        } else {
+            return null;
+        }
     }
 }
